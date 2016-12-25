@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Get your location</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAXoReu2JMdi6POrcgzee6rJ9CeVX_CwXo" type="text/javascript"></script>
+    <style>
+        body,
+        html,
+        .contaner-fluid {
+            height: 100%;
+        }
+    </style>
+</head>
+
+
+<body>
+    <div class="container-fluid">
+        <div style="height:30%">
+            <h3 id="demo" style="text-align:center"> Hello Get Your Location </h3><br>
+            <input type="submit" value="Click to get Location !" id="btn">
+        </div>
+        <div style="height:400px" id="mapholder"></div>
+    </div>
+    <script>
+        var x = document.getElementById("demo ");
+        var sub = document.getElementById('btn');
+
+        var points = [{}, {}];
+        sub.onclick = function() {
+
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(onSuccess, onError, {
+                    maximumAge: 60 * 1000,
+                    timeout: 5 * 60 * 1000,
+                    enableHighAccuracy: true
+                });
+            } else {
+                x.innerHTML = "Geolocation is not supported by this browser. ";
+            }
+        }
+
+        function onSuccess(position) {
+            points[0].lat = position.coords.latitude;
+            points[0].long = position.coords.longitude;
+            alert("hi your location lat : " + points[0].lat);
+            var mapOptions = {
+                center: new google.maps.LatLng(points[0].lat, points[0].long),
+                zoom: 17,
+                mapTypeId: google.maps.MapTypeId.SATELLITE
+            };
+            var map = new google.maps.Map(document.getElementById('mapholder'), mapOptions);
+            var marker = new google.maps.Marker({
+                position: new google.maps.LatLng(points[0].lat, points[0].long),
+                map: map
+            });
+        }
+
+        /*function showPosition(position) {
+            var latlon = position.coords.latitude + ", " + position.coords.longitude;
+            document.getElementById('data').innerHTML = "Latitude=" + position.coords.latitude + " Longitude=" + position.coords.longitude + " . ";
+            var img_url = "https://maps.googleapis.com/maps/api/staticmap?center=" +
+                latlon + " &zoom=14&size=400x300&sensor=false ";
+            document.getElementById("mapholder ").innerHTML = "<img src='" + img_url + "'>"; }*/
+        function onError(error) {
+            switch (error.code) {
+                case error.PERMISSION_DENIED:
+                    x.innerHTML = "User denied the request for Geolocation."
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    x.innerHTML = "Location information is unavailable."
+                    break;
+                case
+                error.TIMEOUT:
+                    x.innerHTML = "The request to get user location timed out."
+                    break;
+                case error.UNKNOWN_ERROR:
+                    x.innerHTML = "An unknown error occurred."
+                    break;
+            }
+        }
+    </script>
+
+</body>
+
+</html>
+/*AIzaSyAXoReu2JMdi6POrcgzee6rJ9CeVX_CwXo*/
